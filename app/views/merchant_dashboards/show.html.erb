@@ -1,0 +1,7 @@
+<h1><%= @merchant.name %></h1>
+<nav>
+  <ul>
+    <li><%= link_to 'Items Index', merchant_items_path(@merchant) %></li>
+    <li><%= link_to 'Invoices Index', merchant_invoices_path(@merchant) %></li>
+  </ul>
+</nav>

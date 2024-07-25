@@ -1,2 +1,4 @@
-<h1>Admin::Invoices#show</h1>
-<p>Find me in app/views/admin/invoices/show.html.erb</p>
+<h1><%= "Invoice Number: #{@invoice.id}" %></h1>
+<p><%= "Invoice Status: #{@invoice.status}" %></p>
+<p><%= "Created On: #{@invoice.created_at.strftime("%A, %B %d, %Y")}" %></p>
+<p><%= "Customer: #{@invoice.customer_full_name}" %></p>

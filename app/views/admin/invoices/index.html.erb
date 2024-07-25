@@ -1,2 +1,8 @@
-<h1>Admin::Invoices#index</h1>
-<p>Find me in app/views/admin/invoices/index.html.erb</p>
+<h1>Admin Invoices Index</h1>
+<section id="invoice_ids">
+<% @invoices.each do |invoice| %>
+  <section id= "invoice-<%= invoice.id %>">
+    <p>Invoice ID: <%= link_to "#{invoice.id}", admin_invoice_path(invoice.id) %></p>
+  </section>
+<% end %>
+</section>

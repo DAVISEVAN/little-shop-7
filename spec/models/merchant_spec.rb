@@ -46,7 +46,7 @@ RSpec.describe Merchant, type: :model do
     it 'returns the top 5 customers with the largest number of successful transactions' do
       top_customers = @merchant.top_customers
 
-      expect(top_customers.count).to eq(5)
+      expect(@merchant.top_customers).to eq([@customer1, @customer2, @customer3, @customer4, @customer5])
       expect(top_customers.first.transaction_count).to eq(1) # Since each customer has 1 successful transaction
     end
   end

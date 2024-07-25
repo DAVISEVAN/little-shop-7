@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-  resources :merchants, only: [:index, :show] do
-    resource :dashboard, only: [:show], controller: 'merchant_dashboards'
-    resources :items, only: [:index], controller: 'merchant_items'
-    resources :invoices, only: [:index], controller: 'merchant_invoices'
+  resources :merchants, only: [] do
+    get 'dashboard', to: 'merchant_dashboards#show'
+    resources :items, only: [:index, :show]
+    resources :invoices, only: [:index, :show]
   end
 end

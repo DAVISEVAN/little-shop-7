@@ -1,7 +1,15 @@
 <h1><%= @merchant.name %></h1>
+
 <nav>
-  <ul>
-    <li><%= link_to 'Items Index', merchant_items_path(@merchant) %></li>
-    <li><%= link_to 'Invoices Index', merchant_invoices_path(@merchant) %></li>
-  </ul>
+  <%= link_to 'Items Index', merchant_items_path(@merchant) %>
+  <%= link_to 'Invoices Index', merchant_invoices_path(@merchant) %>
 </nav>
+
+<h2>Top 5 Customers</h2>
+<ul id="top-customers">
+  <% @top_customers.each do |customer| %>
+    <li>
+      <%= customer.first_name %> <%= customer.last_name %> - <%= customer.transactions_count %> transactions
+    </li>
+  <% end %>
+</ul>

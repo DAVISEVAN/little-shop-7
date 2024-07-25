@@ -1,4 +1,4 @@
-class CreateTransaction < ActiveRecord::Migration[7.1]
+class CreateTransactions < ActiveRecord::Migration[7.1]
   def change
     create_table :transactions do |t|
       t.string :credit_card_number

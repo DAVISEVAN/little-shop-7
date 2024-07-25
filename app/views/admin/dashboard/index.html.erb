@@ -1,0 +1,20 @@
+<h1>Admin Dashboard</h1>
+<p>Welcome to the admin dashboard!</p>
+
+<p>
+  <%= link_to 'Merchants Index', admin_merchants_path %>
+</p>
+
+<p>
+  <%= link_to 'Invoices Index', admin_invoices_path %>
+</p>
+
+<section id="top_5_customers">
+  <% @customers.top_5_customers.each do |customer| %>
+    <section id= "customer-<%= customer.id %>">
+      <%= customer.first_name %>
+      <%= "Successful Transactions: #{customer.transaction_count}" %>
+    </section>
+  <% end %>
+</section>
+

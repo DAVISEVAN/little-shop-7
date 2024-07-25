@@ -1,10 +1,6 @@
-require "rails_helper"
+require 'rails_helper'
 
-RSpec.describe Customer, type: :model do
-  describe "relationships" do
-    it { should have_many :invoices}
-  end
-
+RSpec.describe 'Admin Dashboard', type: :feature do
   before(:each) do
     @merchant1 = Merchant.create!(name: "Target")
     @merchant2 = Merchant.create!(name: "Walmart")
@@ -64,11 +60,53 @@ RSpec.describe Customer, type: :model do
     @transaction6 = Transaction.create!(credit_card_number: "4654405418249642", credit_card_expiration_date: "04/28", result: 0, invoice_id: @invoice13.id) # customer4
     @transaction6 = Transaction.create!(credit_card_number: "4654405418249642", credit_card_expiration_date: "04/28", result: 0, invoice_id: @invoice14.id) # customer4
     @transaction6 = Transaction.create!(credit_card_number: "4654405418249642", credit_card_expiration_date: "04/28", result: 0, invoice_id: @invoice15.id) # customer5
+
+    visit admin_dashboard_path
+  end
+  
+  it 'shows a header for the admin dashboard' do
+    expect(page).to have_content('Admin Dashboard')
   end
 
-  describe "class methods" do
-    it "self.top_5_customers" do
-      expect(Customer.top_5_customers).to eq([@customer1, @customer2, @customer3, @customer4, @customer5])
+  it 'has a link to the admin merchants index' do
+    expect(page).to have_link('Merchants Index', href: admin_merchants_path)
+  end
+
+  it 'has a link to the admin invoices index' do
+    expect(page).to have_link('Invoices Index', href: admin_invoices_path)
+  end
+
+  it "displays the top 5 customers and the number of their successful transactions" do
+    within("#top_5_customers") do
+      expect(@customer1.first_name).to appear_before(@customer2.first_name)
+      expect(@customer2.first_name).to appear_before(@customer3.first_name)
+      expect(@customer3.first_name).to appear_before(@customer4.first_name)
+      expect(@customer4.first_name).to appear_before(@customer5.first_name)
+    end
+
+    within("#customer-#{@customer1.id}") do
+      expect(page).to have_content(@customer1.first_name)
+      expect(page).to have_content("Successful Transactions: 5")
+    end
+
+    within("#customer-#{@customer2.id}") do
+      expect(page).to have_content(@customer2.first_name)
+      expect(page).to have_content("Successful Transactions: 4")
+    end
+
+    within("#customer-#{@customer3.id}") do
+      expect(page).to have_content(@customer3.first_name)
+      expect(page).to have_content("Successful Transactions: 3")
+    end
+
+    within("#customer-#{@customer4.id}") do
+      expect(page).to have_content(@customer4.first_name)
+      expect(page).to have_content("Successful Transactions: 2")
+    end
+
+    within("#customer-#{@customer5.id}") do
+      expect(page).to have_content(@customer5.first_name)
+      expect(page).to have_content("Successful Transactions: 1")
     end
   end
 end

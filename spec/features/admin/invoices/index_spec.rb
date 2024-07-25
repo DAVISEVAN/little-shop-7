@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "the admin applications show page" do
+RSpec.describe "the admin invoices index page" do
   before(:each) do
       @customer = create(:customer)
       @customer2 = create(:customer)
@@ -33,7 +33,7 @@ RSpec.describe "the admin applications show page" do
     expect(current_path).to eq(admin_invoice_path(@invoice2.id))
 
     visit admin_invoices_path
-    
+
     within("#invoice-#{@invoice3.id}") do
       click_link @invoice3.id
     end

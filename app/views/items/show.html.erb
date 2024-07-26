@@ -1,0 +1,7 @@
+<h1><%=@item.name%></h1>
+
+<div id = "item-index">
+    <p>Name: <%=@item.name%></p>
+    <p>Description: <%=@item.description%></p>
+    <p>Current Selling Price: <%=number_to_currency(@item.unit_price / 100.0)%></p>
+</div>

@@ -69,5 +69,53 @@ RSpec.describe 'Merchant Dashboard', type: :feature do
       end
     end
   end
+    #US 4 Simply Displays all items ready to ship. Name, Created_at, Invoice ID.
+  it 'displays all items ready to ship' do
+    visit merchant_dashboard_path(@merchant)
+
+    within('#items-ready-to-ship') do
+      @merchant.items_ready_to_ship.each do |item|
+        expect(page).to have_content(item.name)
+        expect(page).to have_content(item.created_at.strftime('%A, %B %d, %Y'))
+        expect(page).to have_content(item.invoice_id)
+      end
+    end
+  end
+
+  it 'has a link to invoice show page in Items Ready to Ship' do
+    visit merchant_dashboard_path(@merchant)
+
+    expect(current_path).to eq(merchant_dashboard_path(@merchant))
+
+    within('#items-ready-to-ship') do
+      click_link(@invoice1.id.to_s) #Put to_s because Capybara doesn't like integers I guess.
+
+      expect(current_path).to eq(merchant_invoice_path(@merchant, @invoice1))
+    end
+  end
+
+    #US 5 checks for order Oldest to Newest.
+    it 'displays the time in the correct format' do
+      visit merchant_dashboard_path(@merchant)
+  
+      within('#items-ready-to-ship') do
+        expect(page).to have_content(@item1.created_at.strftime('%A, %B %d, %Y'))
+      end
+    end
+
+  it 'displays items ready to ship in order from oldest to newest' do
+    visit merchant_dashboard_path(@merchant)
+
+    within('#items-ready-to-ship') do
+    items = page.all('li')
+
+    expect(items[0]).to have_content(@item1.name)
+    expect(items[0]).to have_content(@invoice5.id)
+    expect(items[1]).to have_content(@item1.name)
+    expect(items[1]).to have_content(@invoice3.id)
+    expect(items[2]).to have_content(@item1.name)
+    expect(items[2]).to have_content(@invoice1.id)
+    end
+  end
 end
 

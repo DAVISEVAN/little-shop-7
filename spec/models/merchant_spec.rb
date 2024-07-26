@@ -46,8 +46,23 @@ RSpec.describe Merchant, type: :model do
     it 'returns the top 5 customers with the largest number of successful transactions' do
       top_customers = @merchant.top_customers
 
-      expect(top_customers.count).to eq(5)
-      expect(top_customers.first.transaction_count).to eq(1) # Since each customer has 1 successful transaction
+      expect(@merchant.top_customers).to eq([@customer1, @customer2, @customer3, @customer4, @customer5])
+      expect(top_customers.first.transaction_count).to eq(1) #Since each customer has 1 successful transaction
+    end
+
+    it 'lists all items ready to ship' do
+      #testing .items_ready_to_ship method. Shows all items purchased in this instance with the status of 0
+
+      expect(@merchant.items_ready_to_ship).to eq([@item1, @item1, @item1])
+    end
+
+    it 'lists items ready to ship in order from oldest to newest' do
+      #testing .items_ready_to_ship method. Shows all items purchased 'pending' from oldest to newest.
+
+      expect(@merchant.items_ready_to_ship).to eq([@item1, @item1, @item1])
+      expect(@merchant.items_ready_to_ship[2].invoice_date).to eq(@invoice1.created_at)
+      expect(@merchant.items_ready_to_ship[1].invoice_date).to eq(@invoice3.created_at)
+      expect(@merchant.items_ready_to_ship[0].invoice_date).to eq(@invoice5.created_at)
     end
   end
 end

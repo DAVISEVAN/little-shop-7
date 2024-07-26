@@ -11,4 +11,12 @@ class Merchant < ApplicationRecord
       .order('transaction_count DESC')
       .limit(5)
   end
+
+  def items_ready_to_ship
+    items
+      .joins(:invoices)
+      .where(invoices: { status: 0 }) # 0 == 'pending'
+      .select('items.*, invoices.id as invoice_id, invoices.created_at as invoice_date')
+      .order('invoice_date DESC')
+  end
 end

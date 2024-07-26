@@ -27,12 +27,12 @@ RSpec.describe Merchant, type: :model do
       @invoice5 = Invoice.create!(status: 0, customer: @customer5)
       @invoice6 = Invoice.create!(status: 1, customer: @customer6)
 
-      InvoiceItem.create!(quantity: 5, unit_price: 100, item: @item1, invoice: @invoice1)
-      InvoiceItem.create!(quantity: 3, unit_price: 200, item: @item2, invoice: @invoice2)
-      InvoiceItem.create!(quantity: 4, unit_price: 150, item: @item1, invoice: @invoice3)
-      InvoiceItem.create!(quantity: 2, unit_price: 250, item: @item2, invoice: @invoice4)
-      InvoiceItem.create!(quantity: 6, unit_price: 120, item: @item1, invoice: @invoice5)
-      InvoiceItem.create!(quantity: 1, unit_price: 300, item: @item2, invoice: @invoice6)
+      InvoiceItem.create!(quantity: 5, unit_price: 100, status: 1, item: @item1, invoice: @invoice1)
+      InvoiceItem.create!(quantity: 3, unit_price: 200, status: 1, item: @item2, invoice: @invoice2)
+      InvoiceItem.create!(quantity: 4, unit_price: 150, status: 1, item: @item1, invoice: @invoice3)
+      InvoiceItem.create!(quantity: 2, unit_price: 250, status: 0, item: @item2, invoice: @invoice4)
+      InvoiceItem.create!(quantity: 6, unit_price: 120, status: 0, item: @item1, invoice: @invoice5)
+      InvoiceItem.create!(quantity: 1, unit_price: 300, status: 0, item: @item2, invoice: @invoice6)
 
       Transaction.create!(credit_card_number: "1234567812345678", credit_card_expiration_date: "04/25", result: 0, invoice: @invoice1)
       Transaction.create!(credit_card_number: "1234567812345678", credit_card_expiration_date: "04/25", result: 0, invoice: @invoice2)
@@ -51,18 +51,17 @@ RSpec.describe Merchant, type: :model do
     end
 
     it 'lists all items ready to ship' do
-      #testing .items_ready_to_ship method. Shows all items purchased in this instance with the status of 0
+      #testing .items_ready_to_ship method. Shows all items purchased in this instance with the status of 1
 
-      expect(@merchant.items_ready_to_ship).to eq([@item1, @item1, @item1])
+      expect(@merchant.items_ready_to_ship).to eq([@item1, @item2, @item1])
     end
 
     it 'lists items ready to ship in order from oldest to newest' do
-      #testing .items_ready_to_ship method. Shows all items purchased 'pending' from oldest to newest.
+      #testing .items_ready_to_ship method. Shows all items purchased 'packaged' from oldest to newest.
 
-      expect(@merchant.items_ready_to_ship).to eq([@item1, @item1, @item1])
-      expect(@merchant.items_ready_to_ship[2].invoice_date).to eq(@invoice1.created_at)
-      expect(@merchant.items_ready_to_ship[1].invoice_date).to eq(@invoice3.created_at)
-      expect(@merchant.items_ready_to_ship[0].invoice_date).to eq(@invoice5.created_at)
+      expect(@merchant.items_ready_to_ship[2]).to eq(@item1)
+      expect(@merchant.items_ready_to_ship[1]).to eq(@item2)
+      expect(@merchant.items_ready_to_ship[0]).to eq(@item1)
     end
   end
 end

@@ -71,4 +71,16 @@ RSpec.describe Customer, type: :model do
       expect(Customer.top_5_customers).to eq([@customer1, @customer2, @customer3, @customer4, @customer5])
     end
   end
+
+  describe "instance methods" do
+    it "full_name" do
+      expect(@customer1.full_name).to eq("Bob The Builder")
+      expect(@customer2.full_name).to eq("Ted Bear")
+      expect(@customer3.full_name).to eq("Shaggy Mystery")
+      expect(@customer4.full_name).to eq("Velma Nerd")
+      expect(@customer5.full_name).to eq("Scooby Doo")
+      expect(@customer6.full_name).to eq("Vinny Cheddah")
+      expect(@customer7.full_name).to eq("Dexter Lab")
+    end
+  end
 end

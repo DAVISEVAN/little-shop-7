@@ -38,12 +38,12 @@ RSpec.describe 'Admin Dashboard', type: :feature do
     @invoice15 = Invoice.create!(status: 1, customer_id: @customer5.id)
 
 
-    InvoiceItem.create!(quantity: 2, unit_price: 500, item_id: @item1.id, invoice_id: @invoice1.id)
-    InvoiceItem.create!(quantity: 3, unit_price: 500, item_id: @item2.id, invoice_id: @invoice2.id)
-    InvoiceItem.create!(quantity: 1, unit_price: 500, item_id: @item3.id, invoice_id: @invoice3.id)
-    InvoiceItem.create!(quantity: 4, unit_price: 500, item_id: @item4.id, invoice_id: @invoice4.id)
-    InvoiceItem.create!(quantity: 3, unit_price: 500, item_id: @item5.id, invoice_id: @invoice5.id)
-    InvoiceItem.create!(quantity: 2, unit_price: 500, item_id: @item6.id, invoice_id: @invoice6.id)
+    InvoiceItem.create!(quantity: 2, unit_price: 500, item_id: @item1.id, invoice_id: @invoice1.id, status: 0)
+    InvoiceItem.create!(quantity: 3, unit_price: 500, item_id: @item2.id, invoice_id: @invoice2.id, status: 1)
+    InvoiceItem.create!(quantity: 1, unit_price: 500, item_id: @item3.id, invoice_id: @invoice3.id, status: 2)
+    InvoiceItem.create!(quantity: 4, unit_price: 500, item_id: @item4.id, invoice_id: @invoice4.id, status: 0)
+    InvoiceItem.create!(quantity: 3, unit_price: 500, item_id: @item5.id, invoice_id: @invoice5.id, status: 1)
+    InvoiceItem.create!(quantity: 2, unit_price: 500, item_id: @item6.id, invoice_id: @invoice6.id, status: 2)
 
     @transaction1 = Transaction.create!(credit_card_number: "4654405418249632", credit_card_expiration_date: "04/27", result: 0, invoice_id: @invoice1.id) # customer1
     @transaction2 = Transaction.create!(credit_card_number: "4654405418249633", credit_card_expiration_date: "04/26", result: 0, invoice_id: @invoice2.id) # customer1
@@ -78,10 +78,10 @@ RSpec.describe 'Admin Dashboard', type: :feature do
 
   it "displays the top 5 customers and the number of their successful transactions" do
     within("#top_5_customers") do
-      expect(@customer1.first_name).to appear_before(@customer2.first_name)
-      expect(@customer2.first_name).to appear_before(@customer3.first_name)
-      expect(@customer3.first_name).to appear_before(@customer4.first_name)
-      expect(@customer4.first_name).to appear_before(@customer5.first_name)
+      expect(@customer1.full_name).to appear_before(@customer2.full_name)
+      expect(@customer2.full_name).to appear_before(@customer3.full_name)
+      expect(@customer3.full_name).to appear_before(@customer4.full_name)
+      expect(@customer4.full_name).to appear_before(@customer5.full_name)
     end
 
     within("#customer-#{@customer1.id}") do
@@ -108,5 +108,44 @@ RSpec.describe 'Admin Dashboard', type: :feature do
       expect(page).to have_content(@customer5.first_name)
       expect(page).to have_content("Successful Transactions: 1")
     end
+  end
+
+  it "displays links to all incomplete invoice IDs (invoices with items that have not shipped)" do
+    within("#incomplete_invoices") do
+      expect(page).to have_content(@invoice1.id)
+      expect(page).to have_content(@invoice2.id)
+      expect(page).to have_content(@invoice4.id)
+      expect(page).to have_content(@invoice5.id)
+
+      expect(page).to_not have_content(@invoice3.id)
+      expect(page).to_not have_content(@invoice6.id)
+    end
+    
+    within("#invoice-#{@invoice1.id}") do
+      click_link @invoice1.id
+    end
+
+    expect(current_path).to eq(admin_invoice_path(@invoice1.id))
+    visit admin_dashboard_path
+
+    within("#invoice-#{@invoice2.id}") do
+      click_link @invoice2.id
+    end
+
+    expect(current_path).to eq(admin_invoice_path(@invoice2.id))
+    visit admin_dashboard_path
+
+    within("#invoice-#{@invoice4.id}") do
+      click_link @invoice4.id
+    end
+
+    expect(current_path).to eq(admin_invoice_path(@invoice4.id))
+    visit admin_dashboard_path
+
+    within("#invoice-#{@invoice5.id}") do
+      click_link @invoice5.id
+    end
+
+    expect(current_path).to eq(admin_invoice_path(@invoice5.id))
   end
 end

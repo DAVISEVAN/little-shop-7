@@ -14,5 +14,8 @@ class Invoice < ApplicationRecord
   def self.incomplete_invoices
     joins(:invoice_items)
     .where("invoice_items.status != 2")
+    .select("invoices.*")
+    .group("invoices.id")
+    .order("invoices.id")
   end
 end

@@ -16,6 +16,6 @@ class Invoice < ApplicationRecord
     .where("invoice_items.status != 2")
     .select("invoices.*")
     .group("invoices.id")
-    .order("invoices.id")
+    .order("invoices.created_at")
   end
 end

@@ -1,24 +1,23 @@
+
 class Merchant < ApplicationRecord
   has_many :items
-  has_many :invoices, through: :items
+  has_many :invoice_items, through: :items
+  has_many :invoices, through: :invoice_items
 
   def top_customers
-    Customer
-      .joins(invoices: :transactions)
-      .where(invoices: { id: self.invoices.pluck(:id) }, transactions: { result: 0 })  # 0 corresponds to 'success'
-      .select('customers.*, COUNT(transactions.id) as transaction_count')
-      .group('customers.id')
-      .order('transaction_count DESC')
-      .limit(5)
+    Customer.joins(invoices: { invoice_items: :item })
+            .joins('INNER JOIN transactions ON transactions.invoice_id = invoices.id')
+            .where(items: { merchant_id: id }, transactions: { result: 0 })
+            .select('customers.*, count(transactions.id) as transaction_count')
+            .group('customers.id')
+            .order('transaction_count desc')
+            .limit(5)
   end
 
   def items_ready_to_ship
-    items
-      .joins(:invoice_items)
-      .where('invoice_items.status = 1') # 1 == 'packaged'
-      .select('items.*, invoice_items.invoice_id as invoice_id, invoice_items.created_at as invoice_date')
-      .order('invoice_date DESC')
+    items.joins(:invoice_items)
+         .where(invoice_items: { status: :pending })
+         .select('items.*, invoice_items.invoice_id, invoice_items.created_at AS invoice_created_at')
+         .order('invoice_items.created_at ASC')
   end
-
-
 end

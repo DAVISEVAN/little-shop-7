@@ -9,9 +9,29 @@ class MerchantItemsController < ApplicationController
   end
 
   def show
+    @merchant = Merchant.find(params[:merchant_id])
+    @item = @merchant.items.find(params[:id])
   end
 
   def edit
+    @merchant = Merchant.find(params[:merchant_id])
+    @item = @merchant.items.find(params[:id])
+  end
+
+  def create
+    @merchant = Merchant.find(params[:merchant_id])
+    @item = @merchant.items.new(item_params)
+    @item.status = 'disabled' # Set default status to disabled
+    if @item.save
+      redirect_to merchant_items_path(@merchant), notice: 'Item was successfully created.'
+    else
+      render :new
+    end
+  end
+
+  def new
+    @merchant = Merchant.find(params[:merchant_id])
+    @item = @merchant.items.new
   end
 
   def update

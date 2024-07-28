@@ -36,13 +36,13 @@ RSpec.describe 'Merchant Dashboard', type: :feature do
     @transaction5 = Transaction.create!(credit_card_number: "1234567812345678", credit_card_expiration_date: "04/25", result: 0, invoice: @invoice5)
     @transaction6 = Transaction.create!(credit_card_number: "1234567812345678", credit_card_expiration_date: "04/25", result: 0, invoice: @invoice6)
   end
-
+# User Story 1, Merchant Dashboard displays merchant name 
   it 'displays the name of the merchant' do
     visit merchant_dashboard_path(@merchant)
 
     expect(page).to have_content(@merchant.name)
   end
-
+# User Story 2, Merchant Dashboard links to merchant items and invoices index
   it 'displays a link to the merchant items index' do
     visit merchant_dashboard_path(@merchant)
 
@@ -54,7 +54,7 @@ RSpec.describe 'Merchant Dashboard', type: :feature do
 
     expect(page).to have_link('Invoices Index', href: merchant_invoices_path(@merchant))
   end
-
+# User Story 3, Merchant Dashboard displays top 5 customers with successful transactions
   it 'displays the top 5 customers with the largest number of successful transactions' do
     visit merchant_dashboard_path(@merchant)
 
@@ -64,7 +64,8 @@ RSpec.describe 'Merchant Dashboard', type: :feature do
       end
     end
   end
-
+# User Story 4, Merchant Dashboard displays items ready to ship
+# User Story 5, Merchant Dashboard displays date next to each item ready to ship
   it 'displays items ready to ship with invoice details' do
     visit merchant_dashboard_path(@merchant)
 

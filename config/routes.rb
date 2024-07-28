@@ -5,13 +5,13 @@ Rails.application.routes.draw do
     resources :merchants, only: [:index, :show, :edit]
     resources :invoices, only: [:index, :show]
   end
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Defines the root path route ("/")
-  # root "articles#index"
+  
   resources :merchants do
-    resources :items
-    resources :invoices
-    get '/dashboard', to: 'merchant_dashboards#show', as: 'dashboard'
+    get 'dashboard', to: 'merchant_dashboards#show'
+    resources :items, controller: 'merchant_items' do
+      patch 'toggle_status', to: 'item_statuses#update', on: :member
+    end
+    resources :invoices, controller: 'merchant_invoices'
   end
+  
 end

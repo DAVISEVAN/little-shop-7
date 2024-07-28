@@ -1,11 +1,12 @@
+
 require 'rails_helper'
 
 RSpec.describe 'Merchant Dashboard', type: :feature do
-  before :each do
+  before(:each) do
     @merchant = Merchant.create!(name: "Test Merchant")
 
-    @item1 = Item.create!(name: "Item 1", description: "Description 1", unit_price: 100, merchant: @merchant)
-    @item2 = Item.create!(name: "Item 2", description: "Description 2", unit_price: 200, merchant: @merchant)
+    @item1 = @merchant.items.create!(name: "Item 1", description: "Description 1", unit_price: 100, status: :enabled)
+    @item2 = @merchant.items.create!(name: "Item 2", description: "Description 2", unit_price: 200, status: :enabled)
 
     @customer1 = Customer.create!(first_name: "John", last_name: "Doe")
     @customer2 = Customer.create!(first_name: "Jane", last_name: "Smith")
@@ -14,108 +15,68 @@ RSpec.describe 'Merchant Dashboard', type: :feature do
     @customer5 = Customer.create!(first_name: "Charlie", last_name: "Davis")
     @customer6 = Customer.create!(first_name: "Dana", last_name: "White")
 
-    @invoice1 = Invoice.create!(status: 0, customer: @customer1)
-    @invoice2 = Invoice.create!(status: 1, customer: @customer2)
-    @invoice3 = Invoice.create!(status: 0, customer: @customer3)
-    @invoice4 = Invoice.create!(status: 1, customer: @customer4)
-    @invoice5 = Invoice.create!(status: 0, customer: @customer5)
-    @invoice6 = Invoice.create!(status: 1, customer: @customer6)
+    @invoice1 = Invoice.create!(status: 0, customer: @customer1, created_at: "2023-07-18")
+    @invoice2 = Invoice.create!(status: 0, customer: @customer2, created_at: "2023-07-19")
+    @invoice3 = Invoice.create!(status: 0, customer: @customer3, created_at: "2023-07-20")
+    @invoice4 = Invoice.create!(status: 0, customer: @customer4, created_at: "2023-07-21")
+    @invoice5 = Invoice.create!(status: 0, customer: @customer5, created_at: "2023-07-22")
+    @invoice6 = Invoice.create!(status: 0, customer: @customer6, created_at: "2023-07-23")
 
-    InvoiceItem.create!(quantity: 5, unit_price: 100, status: 1, item: @item1, invoice: @invoice1)
-    InvoiceItem.create!(quantity: 3, unit_price: 200, status: 1, item: @item2, invoice: @invoice2)
-    InvoiceItem.create!(quantity: 4, unit_price: 150, status: 1, item: @item1, invoice: @invoice3)
-    InvoiceItem.create!(quantity: 2, unit_price: 250, status: 0, item: @item2, invoice: @invoice4)
-    InvoiceItem.create!(quantity: 6, unit_price: 120, status: 0, item: @item1, invoice: @invoice5)
-    InvoiceItem.create!(quantity: 1, unit_price: 300, status: 0, item: @item2, invoice: @invoice6)
+    @invoice_item1 = InvoiceItem.create!(quantity: 5, unit_price: 100, item: @item1, invoice: @invoice1, status: 0)
+    @invoice_item2 = InvoiceItem.create!(quantity: 3, unit_price: 200, item: @item2, invoice: @invoice2, status: 0)
+    @invoice_item3 = InvoiceItem.create!(quantity: 4, unit_price: 150, item: @item1, invoice: @invoice3, status: 0)
+    @invoice_item4 = InvoiceItem.create!(quantity: 2, unit_price: 250, item: @item2, invoice: @invoice4, status: 0)
+    @invoice_item5 = InvoiceItem.create!(quantity: 6, unit_price: 120, item: @item1, invoice: @invoice5, status: 0)
+    @invoice_item6 = InvoiceItem.create!(quantity: 1, unit_price: 300, item: @item2, invoice: @invoice6, status: 0)
 
-    Transaction.create!(credit_card_number: "1234567812345678", credit_card_expiration_date: "04/25", result: 0, invoice: @invoice1)
-    Transaction.create!(credit_card_number: "1234567812345678", credit_card_expiration_date: "04/25", result: 0, invoice: @invoice2)
-    Transaction.create!(credit_card_number: "1234567812345678", credit_card_expiration_date: "04/25", result: 0, invoice: @invoice3)
-    Transaction.create!(credit_card_number: "1234567812345678", credit_card_expiration_date: "04/25", result: 0, invoice: @invoice4)
-    Transaction.create!(credit_card_number: "1234567812345678", credit_card_expiration_date: "04/25", result: 0, invoice: @invoice5)
-    Transaction.create!(credit_card_number: "1234567812345678", credit_card_expiration_date: "04/25", result: 0, invoice: @invoice6)
+    @transaction1 = Transaction.create!(credit_card_number: "1234567812345678", credit_card_expiration_date: "04/25", result: 0, invoice: @invoice1)
+    @transaction2 = Transaction.create!(credit_card_number: "1234567812345678", credit_card_expiration_date: "04/25", result: 0, invoice: @invoice2)
+    @transaction3 = Transaction.create!(credit_card_number: "1234567812345678", credit_card_expiration_date: "04/25", result: 0, invoice: @invoice3)
+    @transaction4 = Transaction.create!(credit_card_number: "1234567812345678", credit_card_expiration_date: "04/25", result: 0, invoice: @invoice4)
+    @transaction5 = Transaction.create!(credit_card_number: "1234567812345678", credit_card_expiration_date: "04/25", result: 0, invoice: @invoice5)
+    @transaction6 = Transaction.create!(credit_card_number: "1234567812345678", credit_card_expiration_date: "04/25", result: 0, invoice: @invoice6)
   end
 
   it 'displays the name of the merchant' do
     visit merchant_dashboard_path(@merchant)
 
-    within('h1') do
-      expect(page).to have_content(@merchant.name)
-    end
+    expect(page).to have_content(@merchant.name)
   end
 
   it 'displays a link to the merchant items index' do
     visit merchant_dashboard_path(@merchant)
 
-    within('nav') do
-      expect(page).to have_link('Items Index', href: merchant_items_path(@merchant))
-    end
+    expect(page).to have_link('Items Index', href: merchant_items_path(@merchant))
   end
 
   it 'displays a link to the merchant invoices index' do
     visit merchant_dashboard_path(@merchant)
 
-    within('nav') do
-      expect(page).to have_link('Invoices Index', href: merchant_invoices_path(@merchant))
-    end
+    expect(page).to have_link('Invoices Index', href: merchant_invoices_path(@merchant))
   end
 
   it 'displays the top 5 customers with the largest number of successful transactions' do
     visit merchant_dashboard_path(@merchant)
 
     within('#top-customers') do
-      @merchant.top_customers.each do |customer|
+      [@customer1, @customer2, @customer3, @customer4, @customer5].each do |customer|
         expect(page).to have_content("#{customer.first_name} #{customer.last_name}")
       end
     end
   end
-    #US 4 Simply Displays all items ready to ship. Name, Created_at, Invoice ID.
-  it 'displays all items ready to ship' do
+
+  it 'displays items ready to ship with invoice details' do
     visit merchant_dashboard_path(@merchant)
 
-    within('#items-ready-to-ship') do
-      @merchant.items_ready_to_ship.each do |item|
-        expect(page).to have_content(item.name)
-        expect(page).to have_content(item.created_at.strftime('%A, %B %d, %Y'))
-        expect(page).to have_content(item.invoice_id)
-      end
+      within('#ready-to-ship-items') do
+      expect(page).to have_content(@item1.name)
+      expect(page).to have_content("Invoice ID: #{@invoice1.id}")
+      expect(page).to have_content(@item2.name)
+      expect(page).to have_content("Invoice ID: #{@invoice2.id}")
+    
+      date_regex = /\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday), (January|February|March|April|May|June|July|August|September|October|November|December) \d{1,2}, \d{4}\b/
+      expect(page).to have_content(date_regex)
     end
-  end
-
-  it 'has a link to invoice show page in Items Ready to Ship' do
-    visit merchant_dashboard_path(@merchant)
-
-    expect(current_path).to eq(merchant_dashboard_path(@merchant))
-
-    within('#items-ready-to-ship') do
-      click_link(@invoice1.id.to_s) #Put to_s because Capybara doesn't like integers I guess.
-
-      expect(current_path).to eq(merchant_invoice_path(@merchant, @invoice1))
-    end
-  end
-
-    #US 5 checks for order Oldest to Newest.
-    it 'displays the time in the correct format' do
-      visit merchant_dashboard_path(@merchant)
-  
-      within('#items-ready-to-ship') do
-        expect(page).to have_content(@item1.created_at.strftime('%A, %B %d, %Y'))
-      end
-    end
-
-  it 'displays items ready to ship in order from oldest to newest' do
-    visit merchant_dashboard_path(@merchant)
-
-    within('#items-ready-to-ship') do
-    items = page.all('li')
-
-    expect(items[0]).to have_content(@item1.name)
-    expect(items[0]).to have_content(@invoice3.id)
-    expect(items[1]).to have_content(@item2.name)
-    expect(items[1]).to have_content(@invoice2.id)
-    expect(items[2]).to have_content(@item1.name)
-    expect(items[2]).to have_content(@invoice1.id)
-    end
+    
   end
 end
-

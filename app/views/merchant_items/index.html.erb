@@ -1,0 +1,21 @@
+<h1>Items</h1>
+
+<h2>Enabled Items</h2>
+<div id="enabled-items">
+  <% @enabled_items.each do |item| %>
+    <div id="item-<%= item.id %>">
+      <p><%= item.name %></p>
+      <%= button_to 'Disable', toggle_status_merchant_item_path(item.merchant_id, item), method: :patch %>
+    </div>
+  <% end %>
+</div>
+
+<h2>Disabled Items</h2>
+<div id="disabled-items">
+  <% @disabled_items.each do |item| %>
+    <div id="item-<%= item.id %>">
+      <p><%= item.name %></p>
+      <%= button_to 'Enable', toggle_status_merchant_item_path(item.merchant_id, item), method: :patch %>
+    </div>
+  <% end %>
+</div>

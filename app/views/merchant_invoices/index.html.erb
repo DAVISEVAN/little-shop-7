@@ -1,0 +1,9 @@
+<h1>Invoices</h1>
+
+<ul>
+  <% @invoices.each do |invoice| %>
+    <li>
+      <%= link_to "Invoice ID: #{invoice.id}", merchant_invoice_path(@merchant, invoice) %>
+    </li>
+  <% end %>
+</ul>

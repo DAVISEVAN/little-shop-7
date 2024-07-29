@@ -30,4 +30,19 @@ class Merchant < ApplicationRecord
       .order('total_revenue DESC')
       .limit(5)
   end
+
+  def best_day_for_item(item_id)
+    subquery = Invoice.joins(:transactions, :invoice_items)
+                      .merge(Transaction.success)
+                      .where(invoice_items: { item_id: item_id })
+                      .select('invoices.id, invoices.created_at, SUM(invoice_items.quantity * invoice_items.unit_price) as revenue')
+                      .group('invoices.id')
+    
+    Invoice.from(subquery, :subquery)
+           .order('subquery.revenue DESC, subquery.created_at DESC')
+           .limit(1)
+           .pluck('subquery.created_at')
+           .first
+           .strftime("%A, %B %d, %Y")
+  end
 end

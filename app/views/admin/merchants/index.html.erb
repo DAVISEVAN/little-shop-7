@@ -1,2 +1,7 @@
-<h1>Admin::Merchants#index</h1>
-<p>Find me in app/views/admin/merchants/index.html.erb</p>
+<h1>Merchants</h1>
+
+<% @merchants.each do |merchant| %>
+  <div class="merchant">
+    <p><%= merchant.name %></p>
+  </div>
+<% end %>

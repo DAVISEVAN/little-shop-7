@@ -37,7 +37,6 @@ RSpec.describe 'Admin Dashboard', type: :feature do
     @invoice14 = Invoice.create!(status: 1, customer_id: @customer4.id)
     @invoice15 = Invoice.create!(status: 1, customer_id: @customer5.id)
 
-
     InvoiceItem.create!(quantity: 2, unit_price: 500, item_id: @item1.id, invoice_id: @invoice1.id, status: 0)
     InvoiceItem.create!(quantity: 3, unit_price: 500, item_id: @item2.id, invoice_id: @invoice2.id, status: 1)
     InvoiceItem.create!(quantity: 1, unit_price: 500, item_id: @item3.id, invoice_id: @invoice3.id, status: 2)

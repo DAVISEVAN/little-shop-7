@@ -22,8 +22,8 @@
 <section id="incomplete_invoices">
   <h3>Incomplete Invoices</h3>
   <% @invoices.incomplete_invoices.each do |invoice| %>
-    <section id= "invoice-<%= invoice.id %>">
-      <p>Invoice ID: <%= link_to "#{invoice.id}", admin_invoice_path(invoice.id) %></p>
+    # <section id= "invoice-<%= invoice.id %>">
+      <p>Invoice ID: <%# link_to "#{invoice.id}", admin_invoice_path(invoice.id) %></p>
       <p><%= "Created On: #{invoice.created_at.strftime("%A, %B %d, %Y")}" %></p>
     </section>
   <% end %>

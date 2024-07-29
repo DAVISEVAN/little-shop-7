@@ -12,10 +12,11 @@ class Invoice < ApplicationRecord
   end
 
   def self.incomplete_invoices
+    # binding.pry
     joins(:invoice_items)
     .where("invoice_items.status != 2")
-    .select("invoices.*")
-    .group("invoices.id")
+    # .select("invoices.*")
+    # .group("invoices.id")
     .order("invoices.created_at")
   end
 end

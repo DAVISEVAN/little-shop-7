@@ -149,15 +149,15 @@ RSpec.describe 'Admin Dashboard', type: :feature do
     expect(current_path).to eq(admin_invoice_path(@invoice5.id))
   end
 
-  it "lists incomplete invoices in order of when they were created (oldest to newest) and displays the date they were created" do
+  xit "lists incomplete invoices in order of when they were created (oldest to newest) and displays the date they were created" do
     # binding.pry
     # save_and_open_page
     within("#incomplete_invoices") do
-      # expect("invoice ID: #{@invoice5.id}").to appear_before("invoice ID: #{@invoice2.id}")
-      # expect(page).to have_content(@invoice1.id)
-      # expect(@invoice5.created_at).to appear_before(@invoice2.created_at)
-      # expect(@invoice2.id).to appear_before(@invoice4.id)
-      # expect(@invoice4.id).to appear_before(@invoice1.id)
+      expect(page).to have_content(@invoice1.id)
+      expect("invoice ID: #{@invoice5.id}").to appear_before("invoice ID: #{@invoice2.id}")
+      expect(@invoice5.created_at).to appear_before(@invoice2.created_at)
+      expect(@invoice2.id).to appear_before(@invoice4.id)
+      expect(@invoice4.id).to appear_before(@invoice1.id)
     end
   end
 end

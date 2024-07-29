@@ -20,4 +20,29 @@ class Merchant < ApplicationRecord
          .select('items.*, invoice_items.invoice_id, invoice_items.created_at AS invoice_created_at')
          .order('invoice_items.created_at ASC')
   end
+
+  def top_5_items_by_revenue
+    items
+      .select('items.*, SUM(invoice_items.unit_price * invoice_items.quantity) AS total_revenue')
+      .joins(invoice_items: { invoice: :transactions })
+      .merge(Transaction.successful)
+      .group('items.id')
+      .order('total_revenue DESC')
+      .limit(5)
+  end
+
+  def best_day_for_item(item_id)
+    subquery = Invoice.joins(:transactions, :invoice_items)
+                      .merge(Transaction.success)
+                      .where(invoice_items: { item_id: item_id })
+                      .select('invoices.id, invoices.created_at, SUM(invoice_items.quantity * invoice_items.unit_price) as revenue')
+                      .group('invoices.id')
+    
+    Invoice.from(subquery, :subquery)
+           .order('subquery.revenue DESC, subquery.created_at DESC')
+           .limit(1)
+           .pluck('subquery.created_at')
+           .first
+           .strftime("%A, %B %d, %Y")
+  end
 end

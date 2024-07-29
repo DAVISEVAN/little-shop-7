@@ -1,5 +1,7 @@
 <h1>Items</h1>
 
+<%= link_to 'New Item', new_merchant_item_path(@merchant) %>
+
 <h2>Enabled Items</h2>
 <div id="enabled-items">
   <% @enabled_items.each do |item| %>
@@ -19,3 +21,17 @@
     </div>
   <% end %>
 </div>
+
+<h2>Top 5 Most Popular Items</h2>
+<div id="top-items">
+  <% @top_items.each do |item| %>
+    <div id="item-<%= item.id %>">
+      <p>
+        <%= link_to item.name, merchant_item_path(@merchant, item) %> - Total Revenue: <%= number_to_currency(item.total_revenue / 100.0) %><br>
+        Top selling date for <%= item.name %> was <%= @merchant.best_day_for_item(item.id) %>
+      </p>
+    </div>
+  <% end %>
+</div>
+
+

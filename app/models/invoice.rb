@@ -10,4 +10,9 @@ class Invoice < ApplicationRecord
   def customer_full_name
     customer.first_name + " " + customer.last_name
   end
+
+  def self.incomplete_invoices
+    joins(:invoice_items)
+    .where("invoice_items.status != 2")
+  end
 end

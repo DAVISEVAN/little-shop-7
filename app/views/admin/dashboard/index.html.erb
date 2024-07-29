@@ -10,10 +10,20 @@
 </p>
 
 <section id="top_5_customers">
+  <h3>Top 5 Customers</h3>
   <% @customers.top_5_customers.each do |customer| %>
     <section id= "customer-<%= customer.id %>">
-      <%= customer.first_name %>
-      <%= "Successful Transactions: #{customer.transaction_count}" %>
+      <%= customer.full_name %>
+      <%= "| Successful Transactions: #{customer.transaction_count}" %>
+    </section>
+  <% end %>
+</section>
+
+<section id="incomplete_invoices">
+  <h3>Incomplete Invoices</h3>
+  <% @invoices.incomplete_invoices.each do |invoice| %>
+    <section id= "invoice-<%= invoice.id %>">
+      <p>Invoice ID: <%= link_to "#{invoice.id}", admin_invoice_path(invoice.id) %></p>
     </section>
   <% end %>
 </section>

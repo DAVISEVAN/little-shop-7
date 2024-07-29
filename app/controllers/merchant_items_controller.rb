@@ -6,6 +6,7 @@ class MerchantItemsController < ApplicationController
     @merchant = Merchant.find(params[:merchant_id])
     @enabled_items = @merchant.items.where(status: 'enabled')
     @disabled_items = @merchant.items.where(status: 'disabled')
+    @top_items = @merchant.top_5_items_by_revenue
   end
 
   def show

@@ -1,2 +1,13 @@
 <h1>Admin::Merchants#edit</h1>
-<p>Find me in app/views/admin/merchants/edit.html.erb</p>
+<h1>Edit Merchant</h1>
+
+<%= form_for [:admin, @merchant] do |f| %>
+  <div>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div>
+    <%= f.submit 'Submit' %>
+  </div>
+<% end %>

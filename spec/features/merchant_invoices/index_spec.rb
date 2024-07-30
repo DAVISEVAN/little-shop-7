@@ -9,7 +9,7 @@ RSpec.describe 'Merchant Invoices Index', type: :feature do
     Transaction.create!(credit_card_number: '1234567812345678', credit_card_expiration_date: '04/25', result: 'success', invoice: @invoice)
   end
 
-  # User Story 5
+  #US 14, Merchant Invoices Index
   it 'displays a list of invoices for the merchant' do
     visit merchant_invoices_path(@merchant)
 

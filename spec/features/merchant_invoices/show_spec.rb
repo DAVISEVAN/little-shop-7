@@ -83,4 +83,19 @@ RSpec.describe 'Merchant Invoices Show Page' do
       expect(page).to have_content("Total Revenue: $5.00")
     end
   end
+
+  # User Story 18, Merchant Invoice Show Page: Update Invoice Item Status
+  it 'allows the merchant to update the invoice item status' do
+    visit merchant_invoice_path(@merchant, @invoice1)
+
+    within("#invoice_item_#{@invoice_item1.id}") do
+      select 'shipped', from: 'Status'
+      click_button 'Update Item Status'
+    end
+
+    expect(current_path).to eq(merchant_invoice_path(@merchant, @invoice1))
+    within("#invoice_item_#{@invoice_item1.id}") do
+      expect(page).to have_select('Status', selected: 'shipped')
+    end
+  end
 end

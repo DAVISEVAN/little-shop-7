@@ -92,4 +92,12 @@ RSpec.describe "the admin invoices show page" do
       expect(page).to have_content("Price Sold At: $#{@ii3.unit_price / 100}")
     end
   end
+
+  it "should show total revenue" do
+    visit admin_invoice_path(@invoice1)
+  
+    within("#total_revenue") do
+      expect(page).to have_content("Total Invoice Revenue: $40.00")
+    end
+  end
 end

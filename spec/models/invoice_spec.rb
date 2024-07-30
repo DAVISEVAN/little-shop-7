@@ -49,6 +49,12 @@ RSpec.describe Invoice, type: :model do
 			expect(@invoice2.customer_full_name).to eq(@customer1.first_name + " " + @customer1.last_name)
 			expect(@invoice3.customer_full_name).to eq(@customer2.first_name + " " + @customer2.last_name)
 		end
+
+		it "should calculate the total revenue for the invoice" do
+			expect(@invoice1.total_revenue).to eq(1000)
+      expect(@invoice2.total_revenue).to eq(1500)
+      expect(@invoice3.total_revenue).to eq(500)
+		end
 	end
 
 	describe "class methods" do

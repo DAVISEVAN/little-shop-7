@@ -16,4 +16,8 @@ class Invoice < ApplicationRecord
     .where("invoice_items.status != 2")
     .order("invoices.created_at")
   end
+
+  def total_revenue
+    invoice_items.sum("unit_price * quantity")
+  end
 end

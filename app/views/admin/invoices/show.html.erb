@@ -2,3 +2,15 @@
 <p><%= "Invoice Status: #{@invoice.status}" %></p>
 <p><%= "Created On: #{@invoice.created_at.strftime("%A, %B %d, %Y")}" %></p>
 <p><%= "Customer: #{@invoice.customer_full_name}" %></p>
+
+<section id="invoice_items">
+  <h3>Items on Invoice</h3>
+  <% @invoice.invoice_items.each do |invoice_item| %>
+    <section id= "invoice_item-<%= invoice_item.id %>">
+      <p><%= "Item: #{invoice_item.item.name}" %></p>
+      <p><%= "Quantity Ordered: #{invoice_item.quantity}" %></p>
+      <p><%= "Price Sold At: #{number_to_currency(invoice_item.converted_price)}" %></p>
+      <p><%= "Item Status: #{invoice_item.status}" %></p>
+    </section>
+  <% end %>
+</section>

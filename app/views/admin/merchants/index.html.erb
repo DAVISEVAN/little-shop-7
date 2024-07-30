@@ -1,7 +1,9 @@
 <h1>Merchants</h1>
 
-<% @merchants.each do |merchant| %>
-  <div class="merchant">
-    <p><%= merchant.name %></p>
-  </div>
-<% end %>
+<ul>
+  <% @merchants.each do |merchant| %>
+    <li>
+      <%= link_to merchant.name, admin_merchant_path(merchant) %>
+    </li>
+  <% end %>
+</ul>

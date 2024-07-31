@@ -9,21 +9,22 @@ RSpec.describe 'Admin Merchant Update', type: :feature do
   end
 
   it 'can navigate to the edit page from the merchant show page' do
-    visit admin_merchant_path(@merchant)
+    visit admin_merchant_path(@merchant1)
 
     click_link 'Update Merchant'
 
-    expect(current_path).to eq(edit_admin_merchant_path(@merchant))
+    expect(current_path).to eq(edit_admin_merchant_path(@merchant1))
   end
 
   it 'can update the merchant information' do
-    visit edit_admin_merchant_path(@merchant)
+    visit edit_admin_merchant_path(@merchant2)
 
-    fill_in 'Name', with: 'New Name'
+    fill_in 'Name', with: 'Bob'
     click_button 'Submit'
+    
+    expect(current_path).to eq(admin_merchant_path(@merchant2))
 
-    expect(current_path).to eq(admin_merchant_path(@merchant))
-    expect(page).to have_content('New Name')
+    expect(page).to have_content('Bob')
     expect(page).to have_content('Merchant information has been successfully updated.')
   end
 end

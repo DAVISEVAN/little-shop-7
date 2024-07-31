@@ -1,7 +1,5 @@
-<h1>Admin::Merchants#edit</h1>
 <h1>Edit Merchant</h1>
-
-<%= form_for [:admin, @merchant] do |f| %>
+<%= form_for [:admin, @merchant], data: {turbo: false}, local: true do |f| %>
   <div>
     <%= f.label :name %>
     <%= f.text_field :name %>

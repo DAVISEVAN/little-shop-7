@@ -12,10 +12,11 @@ class Admin::MerchantsController < ApplicationController
   end
 
   def update
+    # binding.pry
     @merchant = Merchant.find(params[:id])
     if @merchant.update(merchant_params)
-      flash[:notice] = "Merchant information has beenupdated."
       redirect_to admin_merchant_path(@merchant)
+      flash[:notice] = "Merchant information has been successfully updated."
     else
       render :edit
     end

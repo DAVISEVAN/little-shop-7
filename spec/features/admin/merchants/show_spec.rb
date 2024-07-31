@@ -8,9 +8,9 @@ RSpec.describe "merchants/show.html.erb", type: :view do
   end
 
   it "displays the name of the merchant" do
-    visit admin_merchant_path(merchant)
+    visit admin_merchant_path(@merchant1)
 
-    expect(page).to have_content(merchant.name)
+    expect(page).to have_content(@merchant1.name)
   end
 
 end

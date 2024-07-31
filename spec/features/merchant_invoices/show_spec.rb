@@ -1,7 +1,7 @@
 require 'rails_helper'
-include ActionView::Helpers::NumberHelper #needed for number_to_currency in ApplicationHelper in test context.
+include ActionView::Helpers::NumberHelper
 
-RSpec.describe 'Merchant Invoices Show Page' do
+RSpec.describe 'Merchant Invoices Show Page', type: :feature do
   include ApplicationHelper
 
   before(:each) do
@@ -62,7 +62,7 @@ RSpec.describe 'Merchant Invoices Show Page' do
   end
 
   # User Story 16, Merchant Invoice Show Page: Invoice Item Information
-  it 'has the correct #item-info' do
+  it 'has the correct #invoice-items' do
     visit merchant_invoice_path(@merchant, @invoice1)
 
     within("#invoice-items") do
@@ -80,7 +80,28 @@ RSpec.describe 'Merchant Invoices Show Page' do
     visit merchant_invoice_path(@merchant, @invoice1)
 
     within("#invoice-items") do
-      expect(page).to have_content("Total Revenue: $5.00")
+      expect(page).to have_content("Total Revenue: #{cents_to_dollars(@invoice1.total_revenue)}")
     end
+  end
+
+  # User Story 18, Merchant Invoice Show Page: Update Invoice Item Status
+  it 'allows the merchant to update the invoice item status' do
+    visit merchant_invoice_path(@merchant, @invoice1)
+
+    # save_and_open_page
+
+    within("#invoice_item_status_update_#{@invoice_item1.id}") do
+      
+      
+      select 'Shipped', from: 'status'
+      click_button 'Update Item Status'
+      @invoice_item1.reload
+    end
+  # Save and open page for manual inspection
+      
+
+    expect(current_path).to eq(merchant_invoice_path(@merchant, @invoice1))
+    expect(page).to have_content('Invoice item status updated successfully.')
+    expect(@invoice_item1.status).to eq('shipped')
   end
 end

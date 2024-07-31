@@ -29,7 +29,7 @@ RSpec.describe "the admin invoices show page" do
     visit admin_invoice_path(@invoice1.id)
 
     expect(page).to have_content("Invoice Number: #{@invoice1.id}")
-    expect(page).to have_content("Invoice Status: #{@invoice1.status}")
+    expect(page).to have_select("invoice_status" , selected: @invoice1.status.capitalize)
     expect(page).to have_content("Created On: #{@invoice1.created_at.strftime("%A, %B %d, %Y")}")
     expect(page).to have_content("Customer: #{@customer.first_name} #{@customer.last_name}")
   end
@@ -38,7 +38,7 @@ RSpec.describe "the admin invoices show page" do
     visit admin_invoice_path(@invoice2.id)
 
     expect(page).to have_content("Invoice Number: #{@invoice2.id}")
-    expect(page).to have_content("Invoice Status: #{@invoice2.status}")
+    expect(page).to have_select("invoice_status" , selected: @invoice2.status.capitalize)
     expect(page).to have_content("Created On: #{@invoice2.created_at.strftime("%A, %B %d, %Y")}")
     expect(page).to have_content("Customer: #{@customer.first_name} #{@customer.last_name}")
   end
@@ -47,7 +47,7 @@ RSpec.describe "the admin invoices show page" do
     visit admin_invoice_path(@invoice3.id)
 
     expect(page).to have_content("Invoice Number: #{@invoice3.id}")
-    expect(page).to have_content("Invoice Status: #{@invoice3.status}")
+    expect(page).to have_select("invoice_status" , selected: @invoice3.status.capitalize)
     expect(page).to have_content("Created On: #{@invoice3.created_at.strftime("%A, %B %d, %Y")}")
     expect(page).to have_content("Customer: #{@customer2.first_name} #{@customer2.last_name}")
   end
@@ -99,5 +99,20 @@ RSpec.describe "the admin invoices show page" do
     within("#total_revenue") do
       expect(page).to have_content("Total Invoice Revenue: $40.00")
     end
+  end
+
+  it "allows an admin to update the status" do
+    invoice = create(:invoice, status: "in progress")
+
+    visit admin_invoice_path(invoice)
+
+    expect(page).to have_select("invoice_status", selected: "In progress")
+
+    select "Completed", from: "invoice_status"
+    click_button "Update Invoice Status"
+
+    expect(current_path).to eq(admin_invoice_path(invoice))
+    expect(page).to have_select("invoice_status", selected: "Completed")
+    expect(page).to have_text("Invoice has been Updated to completed")
   end
 end

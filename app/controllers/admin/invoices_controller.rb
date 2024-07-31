@@ -10,7 +10,7 @@ class Admin::InvoicesController < ApplicationController
   def update
     @invoice = Invoice.find(params[:id])
     if @invoice.update(invoice_params)
-      redirect_to admin_invoice_path(@invoice), notice: "Invoice has been Updated"
+      redirect_to admin_invoice_path(@invoice), notice: "Invoice has been Updated to #{@invoice.status}"
     else
       render :show
     end

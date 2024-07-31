@@ -126,4 +126,16 @@ RSpec.describe "merchant index", type: :view do
       expect(page).to_not have_content(@merchant6.name)
     end
   end
+
+  it "has the best date for the merchant" do
+    visit admin_merchants_path
+
+    within("#top_5_merchants_by_revenue") do
+      expect(page).to have_content("Top Day for #{@merchant4.name} was")
+      expect(page).to have_content("Top Day for #{@merchant5.name} was")
+      expect(page).to have_content("Top Day for #{@merchant1.name} was")
+      expect(page).to have_content("Top Day for #{@merchant3.name} was")
+      expect(page).to have_content("Top Day for #{@merchant2.name} was")
+    end
+  end
 end

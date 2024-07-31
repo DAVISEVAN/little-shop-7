@@ -1,0 +1,11 @@
+<h1>Edit Merchant</h1>
+<%= form_for [:admin, @merchant], data: {turbo: false}, local: true do |f| %>
+  <div>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div>
+    <%= f.submit 'Submit' %>
+  </div>
+<% end %>

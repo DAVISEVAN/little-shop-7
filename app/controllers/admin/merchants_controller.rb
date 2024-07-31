@@ -12,7 +12,6 @@ class Admin::MerchantsController < ApplicationController
   end
 
   def update
-    # binding.pry
     @merchant = Merchant.find(params[:id])
     if @merchant.update(merchant_params)
       redirect_to admin_merchant_path(@merchant)

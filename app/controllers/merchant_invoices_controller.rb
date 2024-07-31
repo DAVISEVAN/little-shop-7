@@ -1,5 +1,6 @@
 class MerchantInvoicesController < ApplicationController
   before_action :set_merchant
+  before_action :set_invoice_item, only: [:update]
   before_action :set_invoice, only: [:show]
 
     def index
@@ -13,6 +14,11 @@ class MerchantInvoicesController < ApplicationController
       @invoice_items = @invoice.invoice_items
     end
 
+    def update
+      @invoice_item.update(status: params[:invoice_item][:status])
+      redirect_to merchant_invoice_path(@invoice_item.invoice.merchant, @invoice_item.invoice)
+    end
+
       private
 
     def set_merchant
@@ -22,5 +28,10 @@ class MerchantInvoicesController < ApplicationController
     def set_invoice
       @invoice = @merchant.invoices.find(params[:id])
     end
+
+    def set_invoice_item
+      @invoice_item = InvoiceItem.find(params[:invoice_item_id])
+    end
+  
 end
   

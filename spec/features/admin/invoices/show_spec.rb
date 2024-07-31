@@ -100,4 +100,19 @@ RSpec.describe "the admin invoices show page" do
       expect(page).to have_content("Total Invoice Revenue: $40.00")
     end
   end
+
+  it "allows an admin to update the status" do
+    invoice = create(:invoice, status: "in progress")
+
+    visit admin_invoice_path(invoice)
+
+    expect(page).to have_select("Status", selected: "Pending")
+
+    select "Completed", from: "Status"
+    click_button "Update Invoice Status"
+
+    expect(current_path).to eq(admin_invoice_path(invoice))
+    expect(page).to have_select("Status", selected: "Completed")
+    expect(page).to have_select("Invoice has been Updated")
+  end
 end

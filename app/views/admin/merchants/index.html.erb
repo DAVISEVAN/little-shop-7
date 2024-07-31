@@ -1,7 +1,11 @@
+<% if flash[:notice] %>
+  <div class="notice"><%= flash[:notice] %></div>
+<% end %>
 <h1>Merchants</h1>
+<h2> <%= link_to 'New Merchant', new_admin_merchant_path %> 
 <ul>
 <section id="enabled_merchants">
-<h2> Enabled Merchants </h2>
+<h3> Enabled Merchants </h3>
   <% @enabled_merchants.each do |merchant| %>
     <section id= "merchant-<%= merchant.id %>">
       <li>
@@ -15,7 +19,7 @@
 
 <ul>
 <section id="disabled_merchants">
-<h2> Disabled Merchants </h2>
+<h3> Disabled Merchants </h3>
   <% @disabled_merchants.each do |merchant| %>
     <section id= "merchant-<%= merchant.id %>">
       <li>

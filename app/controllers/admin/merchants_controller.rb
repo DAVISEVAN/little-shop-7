@@ -1,6 +1,8 @@
 class Admin::MerchantsController < ApplicationController
   def index
     @merchants = Merchant.all
+    @enabled_merchants = Merchant.enabled
+    @disabled_merchants = Merchant.disabled
   end
 
   def show
@@ -12,7 +14,6 @@ class Admin::MerchantsController < ApplicationController
   end
 
   def update
-    # binding.pry
     @merchant = Merchant.find(params[:id])
     if @merchant.update(merchant_params)
       redirect_to admin_merchant_path(@merchant)

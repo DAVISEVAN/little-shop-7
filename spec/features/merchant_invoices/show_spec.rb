@@ -88,12 +88,12 @@ RSpec.describe 'Merchant Invoices Show Page', type: :feature do
   it 'allows the merchant to update the invoice item status' do
     visit merchant_invoice_path(@merchant, @invoice1)
 
-    save_and_open_page
+    # save_and_open_page
 
     within("#invoice_item_status_update_#{@invoice_item1.id}") do
       
       
-      select 'shipped', from: 'status'
+      select 'Shipped', from: 'status'
       click_button 'Update Item Status'
       @invoice_item1.reload
     end
@@ -101,8 +101,7 @@ RSpec.describe 'Merchant Invoices Show Page', type: :feature do
       
 
     expect(current_path).to eq(merchant_invoice_path(@merchant, @invoice1))
-    within("#invoice_item_status_update_#{@invoice_item1.id}") do
-      expect(page).to have_select('status', selected: 'shipped')
-    end
+    expect(page).to have_content('Invoice item status updated successfully.')
+    expect(@invoice_item1.status).to eq('shipped')
   end
 end

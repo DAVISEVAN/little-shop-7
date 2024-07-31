@@ -12,7 +12,7 @@ Rails.application.routes.draw do
       patch 'toggle_status', to: 'item_statuses#update', on: :member
     end
     resources :invoices, controller: 'merchant_invoices' do
-      patch 'update_item_status', to: 'item_invoice_statuses#update', on: :member
+      
     end
   end
 

@@ -15,8 +15,12 @@ class MerchantInvoicesController < ApplicationController
     end
 
     def update
-      @invoice_item.update(status: params[:invoice_item][:status])
-      redirect_to merchant_invoice_path(@invoice_item.invoice.merchant, @invoice_item.invoice)
+      @invoice_item = InvoiceItem.find(params[:invoice_item_id])
+      if @invoice_item.update(invoice_item_params)
+        redirect_to merchant_invoice_path(@merchant, @invoice_item.invoice), notice: 'Invoice item status updated successfully.'
+      else
+        render :edit
+      end
     end
 
       private
@@ -31,6 +35,10 @@ class MerchantInvoicesController < ApplicationController
 
     def set_invoice_item
       @invoice_item = InvoiceItem.find(params[:invoice_item_id])
+    end
+
+    def invoice_item_params
+      params.require(:invoice_item).permit(:status)
     end
   
 end

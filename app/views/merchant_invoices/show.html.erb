@@ -28,9 +28,10 @@
       <p>Price Per Item: <%= number_to_currency(invoice_item.unit_price / 100.0) %></p>
       <p>Status: <%= invoice_item.status %></p>
       
-      <%= form_with url: merchant_invoice_path(@merchant, @invoice, invoice_item_id: invoice_item.id), method: :patch, local: true do |form| %>
+      <%= form_with url: merchant_invoice_path(@merchant, @invoice, @invoice_item), method: :patch, local: true do |form| %>
+        <%= form.hidden_field :invoice_item_id, value: invoice_item.id %>
         <%= form.label :status %>
-        <%= form.select :status, InvoiceItem.statuses.keys.map { |k| [k.humanize, k] }, selected: invoice_item.status %>
+        <%= form.select :status, InvoiceItem.statuses.keys.map { |status| [status.humanize, status] }, {}, name: 'invoice_item[status]' %>
         <%= form.submit 'Update Item Status' %>
       <% end %>
       

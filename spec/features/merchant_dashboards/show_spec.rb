@@ -1,4 +1,5 @@
 
+
 require 'rails_helper'
 
 RSpec.describe 'Merchant Dashboard', type: :feature do
@@ -48,9 +49,6 @@ RSpec.describe 'Merchant Dashboard', type: :feature do
 
     expect(page).to have_link('Items Index', href: merchant_items_path(@merchant))
   end
-
-  it 'displays a link to the merchant invoices index' do
-    visit merchant_dashboard_path(@merchant)
 
     expect(page).to have_link('Invoices Index', href: merchant_invoices_path(@merchant))
   end

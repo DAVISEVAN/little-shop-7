@@ -10,12 +10,18 @@
   </head>
 
   <body>
+
     <% if notice %>
       <p class="notice"><%= notice %></p>
     <% end %>
 
     <% if alert %>
       <p class="alert"><%= alert %></p>
+    <% end %>
+
+
+    <% flash.each do |key, message| %>
+      <div class="flash <%= key %>"><%= message %></div>
     <% end %>
 
     <%= yield %>

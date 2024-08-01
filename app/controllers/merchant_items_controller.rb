@@ -48,7 +48,6 @@ class MerchantItemsController < ApplicationController
     end
   end
 
-
   private
 
   def set_merchant

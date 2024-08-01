@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe 'Admin Merchant Update', type: :feature do
-
   before(:each) do
     @merchant1 = Merchant.create!(name: "Target")
     @merchant2 = Merchant.create!(name: "Walmart")

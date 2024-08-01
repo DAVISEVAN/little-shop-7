@@ -1,4 +1,3 @@
-# spec/features/merchant_items/create_spec.rb
 require 'rails_helper'
 
 RSpec.describe "Merchant Item Creation", type: :feature do

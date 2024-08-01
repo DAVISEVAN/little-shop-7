@@ -11,8 +11,18 @@ Rails.application.routes.draw do
   end
   
   resources :merchants, only: [:index, :show] do
-    resource :dashboard, only: [:show], controller: 'merchant_dashboards'
-    resources :items, only: [:index], controller: 'merchant_items'
-    resources :invoices, only: [:index], controller: 'merchant_invoices'
+    get 'dashboard', to: 'merchant_dashboards#show'
+    resources :items, controller: 'merchant_items' do
+      patch 'toggle_status', to: 'item_statuses#update', on: :member
+    end
+    resources :invoices, controller: 'merchant_invoices' do
+      
+    end
+  end
+
+  resources :items do
+    member do
+      patch 'toggle_status', to: 'item_statuses#update'
+    end
   end
 end

@@ -1,3 +1,4 @@
+
 require 'rails_helper'
 
 RSpec.describe "merchant index", type: :view do
@@ -139,3 +140,4 @@ RSpec.describe "merchant index", type: :view do
     end
   end
 end
+

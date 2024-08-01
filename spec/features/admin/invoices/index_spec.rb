@@ -1,3 +1,4 @@
+
 require 'rails_helper'
 
 RSpec.describe "the admin invoices index page" do
@@ -41,3 +42,4 @@ RSpec.describe "the admin invoices index page" do
     expect(current_path).to eq(admin_invoice_path(@invoice3.id))
   end
 end
+

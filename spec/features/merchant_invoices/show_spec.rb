@@ -1,8 +1,9 @@
-
-
 require 'rails_helper'
+include ActionView::Helpers::NumberHelper
 
-RSpec.describe 'Merchant Dashboard', type: :feature do
+RSpec.describe 'Merchant Invoices Show Page', type: :feature do
+  include ApplicationHelper
+
   before(:each) do
     @merchant = Merchant.create!(name: "Test Merchant")
 
@@ -37,45 +38,70 @@ RSpec.describe 'Merchant Dashboard', type: :feature do
     @transaction5 = Transaction.create!(credit_card_number: "1234567812345678", credit_card_expiration_date: "04/25", result: 0, invoice: @invoice5)
     @transaction6 = Transaction.create!(credit_card_number: "1234567812345678", credit_card_expiration_date: "04/25", result: 0, invoice: @invoice6)
   end
-# User Story 1, Merchant Dashboard displays merchant name 
-  it 'displays the name of the merchant' do
-    visit merchant_dashboard_path(@merchant)
 
-    expect(page).to have_content(@merchant.name)
-  end
-# User Story 2, Merchant Dashboard links to merchant items and invoices index
-  it 'displays a link to the merchant items index' do
-    visit merchant_dashboard_path(@merchant)
+  # User Story 15, Invoice Show Page
+  it 'displays the correct header' do
+    visit merchant_invoice_path(@merchant, @invoice1)
 
-    expect(page).to have_link('Items Index', href: merchant_items_path(@merchant))
+    expect(page).to have_content(@invoice1.customer.first_name)
+    expect(page).to have_content("Invoice For: John Doe")
+    
+    expect(current_path).to eq(merchant_invoice_path(@merchant, @invoice1))
   end
 
-    expect(page).to have_link('Invoices Index', href: merchant_invoices_path(@merchant))
-  end
-# User Story 3, Merchant Dashboard displays top 5 customers with successful transactions
-  it 'displays the top 5 customers with the largest number of successful transactions' do
-    visit merchant_dashboard_path(@merchant)
+  # User Story 15, Merchant Invoice Show Page: Invoice Info
+  it 'has the correct #invoice-info' do
+    visit merchant_invoice_path(@merchant, @invoice1)
 
-    within('#top-customers') do
-      [@customer1, @customer2, @customer3, @customer4, @customer5].each do |customer|
-        expect(page).to have_content("#{customer.first_name} #{customer.last_name}")
+    within("#invoice-info") do
+      expect(page).to have_content("Invoice ID: #{@invoice1.id}")
+      expect(page).to have_content("Invoice Date: #{@invoice1.created_at.strftime("%A, %B %d, %Y")}")
+      expect(page).to have_content("Invoice Status: #{@invoice1.status}")
+      expect(page).to have_content("John Doe")
+    end
+  end
+
+  # User Story 16, Merchant Invoice Show Page: Invoice Item Information
+  it 'has the correct #invoice-items' do
+    visit merchant_invoice_path(@merchant, @invoice1)
+
+    within("#invoice-items") do
+      @invoice1.invoice_items.each do |invoice_item|
+        expect(page).to have_content(invoice_item.item.name)
+        expect(page).to have_content(invoice_item.quantity)
+        expect(page).to have_content(cents_to_dollars(invoice_item.unit_price))
+        expect(page).to have_content(invoice_item.status)
       end
     end
   end
-# User Story 4, Merchant Dashboard displays items ready to ship
-# User Story 5, Merchant Dashboard displays date next to each item ready to ship
-  it 'displays items ready to ship with invoice details' do
-    visit merchant_dashboard_path(@merchant)
 
-      within('#ready-to-ship-items') do
-      expect(page).to have_content(@item1.name)
-      expect(page).to have_content("Invoice ID: #{@invoice1.id}")
-      expect(page).to have_content(@item2.name)
-      expect(page).to have_content("Invoice ID: #{@invoice2.id}")
-    
-      date_regex = /\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday), (January|February|March|April|May|June|July|August|September|October|November|December) \d{1,2}, \d{4}\b/
-      expect(page).to have_content(date_regex)
+  # User Story 17, Merchant Invoice Show Page: Total Revenue
+  it 'has the correct total revenue' do
+    visit merchant_invoice_path(@merchant, @invoice1)
+
+    within("#invoice-items") do
+      expect(page).to have_content("Total Revenue: #{cents_to_dollars(@invoice1.total_revenue)}")
     end
-    
+  end
+
+  # User Story 18, Merchant Invoice Show Page: Update Invoice Item Status
+  it 'allows the merchant to update the invoice item status' do
+    visit merchant_invoice_path(@merchant, @invoice1)
+
+    # save_and_open_page
+
+    within("#invoice_item_status_update_#{@invoice_item1.id}") do
+      
+      
+      select 'Shipped', from: 'status'
+      click_button 'Update Item Status'
+      @invoice_item1.reload
+    end
+  # Save and open page for manual inspection
+      
+
+    expect(current_path).to eq(merchant_invoice_path(@merchant, @invoice1))
+    expect(page).to have_content('Invoice item status updated successfully.')
+    expect(@invoice_item1.status).to eq('shipped')
   end
 end

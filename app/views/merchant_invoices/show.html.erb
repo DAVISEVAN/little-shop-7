@@ -1,0 +1,45 @@
+<h1>Invoice For: <%= @invoice.customer.first_name %> <%= @invoice.customer.last_name %></h1>
+
+<div id="invoice-info">
+  <h2>Invoice Information: </h2>
+  <p>Invoice ID: <%= @invoice.id %></p>
+  <p>Invoice Status: <%= @invoice.status %></p>
+  <p>Invoice Date: <%= @invoice.created_at.strftime("%A, %B %d, %Y") %></p>
+  <p>Customer Name: <%= @invoice.customer.first_name %> <%= @invoice.customer.last_name %></p>
+</div>
+
+<div id="invoice-items">
+  <h3>Invoice Items: </h3>
+  <% @invoice.invoice_items.each do |item| %>
+    <p>Item Name: <%= item.item.name %></p>
+    <p>Quantity: <%= item.quantity %></p>
+    <p>Price Per Item: <%= cents_to_dollars(item.unit_price) %></p>
+    <p>Status: <%= item.status %></p>
+  <% end %>
+  <p>Total Revenue: <%= cents_to_dollars(@invoice.total_revenue) %></p>
+</div>
+
+<div id="invoice-items-status-update">
+  <h3>Invoice Items Status Update</h3>
+  <% @invoice.invoice_items.each do |invoice_item| %>
+    <div id="invoice_item_status_update_<%= invoice_item.id %>">
+      <p>Item Name: <%= invoice_item.item.name %></p>
+      <p>Quantity: <%= invoice_item.quantity %></p>
+      <p>Price Per Item: <%= number_to_currency(invoice_item.unit_price / 100.0) %></p>
+      <p>Status: <%= invoice_item.status %></p>
+      
+      <%= form_with url: merchant_invoice_path(@merchant, @invoice, @invoice_item), method: :patch, local: true do |form| %>
+        <%= form.hidden_field :invoice_item_id, value: invoice_item.id %>
+        <%= form.label :status %>
+        <%= form.select :status, InvoiceItem.statuses.keys.map { |status| [status.humanize, status] }, {}, name: 'invoice_item[status]' %>
+        <%= form.submit 'Update Item Status' %>
+      <% end %>
+      
+      <p>Total Revenue for Item: <%= number_to_currency(invoice_item.quantity * invoice_item.unit_price / 100.0) %></p>
+    </div>
+  <% end %>
+
+  <div id="total-revenue-status-update">
+    <h3>Total Revenue for Invoice: <%= number_to_currency(@invoice.total_revenue / 100.0) %></h3>
+  </div>
+</div>

@@ -1,5 +1,3 @@
-
-
 require 'rails_helper'
 
 RSpec.describe 'Merchant Dashboard', type: :feature do
@@ -48,8 +46,6 @@ RSpec.describe 'Merchant Dashboard', type: :feature do
     visit merchant_dashboard_path(@merchant)
 
     expect(page).to have_link('Items Index', href: merchant_items_path(@merchant))
-  end
-
     expect(page).to have_link('Invoices Index', href: merchant_invoices_path(@merchant))
   end
 # User Story 3, Merchant Dashboard displays top 5 customers with successful transactions
@@ -68,14 +64,13 @@ RSpec.describe 'Merchant Dashboard', type: :feature do
     visit merchant_dashboard_path(@merchant)
 
       within('#ready-to-ship-items') do
-      expect(page).to have_content(@item1.name)
-      expect(page).to have_content("Invoice ID: #{@invoice1.id}")
-      expect(page).to have_content(@item2.name)
-      expect(page).to have_content("Invoice ID: #{@invoice2.id}")
+        expect(page).to have_content(@item1.name)
+        expect(page).to have_content("Invoice ID: #{@invoice1.id}")
+        expect(page).to have_content(@item2.name)
+        expect(page).to have_content("Invoice ID: #{@invoice2.id}")
     
-      date_regex = /\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday), (January|February|March|April|May|June|July|August|September|October|November|December) \d{1,2}, \d{4}\b/
-      expect(page).to have_content(date_regex)
+        date_regex = /\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday), (January|February|March|April|May|June|July|August|September|October|November|December) \d{1,2}, \d{4}\b/
+        expect(page).to have_content(date_regex)
     end
-    
   end
 end

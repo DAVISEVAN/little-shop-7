@@ -1,4 +1,3 @@
-
 require 'rails_helper'
 
 RSpec.describe 'Merchant Invoices Index', type: :feature do

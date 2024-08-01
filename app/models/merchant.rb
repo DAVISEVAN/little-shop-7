@@ -1,7 +1,5 @@
-
 class Merchant < ApplicationRecord
   has_many :items
-
   has_many :invoice_items, through: :items
   has_many :invoices, through: :invoice_items
   has_many :invoices, through: :items
@@ -20,9 +18,9 @@ class Merchant < ApplicationRecord
 
   def items_ready_to_ship
     items.joins(:invoice_items)
-         .where(invoice_items: { status: :pending })
-         .select('items.*, invoice_items.invoice_id, invoice_items.created_at AS invoice_created_at')
-         .order('invoice_items.created_at ASC')
+          .where(invoice_items: { status: :pending })
+          .select('items.*, invoice_items.invoice_id, invoice_items.created_at AS invoice_created_at')
+          .order('invoice_items.created_at ASC')
   end
 
   def top_5_items_by_revenue
@@ -43,15 +41,13 @@ class Merchant < ApplicationRecord
                       .group('invoices.id')
     
     Invoice.from(subquery, :subquery)
-           .order('subquery.revenue DESC, subquery.created_at DESC')
-           .limit(1)
-           .pluck('subquery.created_at')
-           .first
-           .strftime("%A, %B %d, %Y")
+            .order('subquery.revenue DESC, subquery.created_at DESC')
+            .limit(1)
+            .pluck('subquery.created_at')
+            .first
+            .strftime("%A, %B %d, %Y")
   end
 
-  
-  
   def self.top_5_merchants_by_revenue
       select('merchants.*, SUM(invoice_items.quantity * invoice_items.unit_price) AS total_revenue')
       .joins(invoices: [:transactions, :invoice_items])
@@ -59,11 +55,10 @@ class Merchant < ApplicationRecord
       .group('merchants.id')
       .order('total_revenue DESC')
       .limit(5)
-
   end
-    def best_day
-      return "" if invoices.blank?
-      invoices.max_by{|invoice| invoice.total_revenue}.created_at
-    end
 
+  def best_day
+    return "" if invoices.blank?
+    invoices.max_by{|invoice| invoice.total_revenue}.created_at
+  end
 end

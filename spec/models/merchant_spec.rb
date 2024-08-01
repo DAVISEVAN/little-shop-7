@@ -1,11 +1,10 @@
-# spec/models/merchant_spec.rb
 require 'rails_helper'
 
 RSpec.describe Merchant, type: :model do
   describe 'associations' do
     it { should have_many(:items) }
     it { should have_many(:invoice_items).through(:items) }
-    it { should have_many(:invoices).through(:invoice_items) }
+    it { should have_many(:invoices).through(:items) }
   end
 
   describe 'methods' do
@@ -40,9 +39,6 @@ RSpec.describe Merchant, type: :model do
       expect(items_ready_to_ship).to eq([@item1.id, @item2.id])
     end
   end
-
-
-
 
   describe 'top items by revenue and best day' do
     before(:each) do
@@ -99,10 +95,8 @@ RSpec.describe Merchant, type: :model do
         @customer2 = Customer.create!(first_name: "Ted", last_name: "Bear")
       
         @invoice1 = Invoice.create!(status: 1, customer_id: @customer1.id) # 4
-        #@invoice2 = Invoice.create!(status: 1, customer_id: @customer1.id) # 2
     
         InvoiceItem.create!(quantity: 2, unit_price: 500, item_id: @item1.id, invoice_id: @invoice1.id, status: 0)
-        # InvoiceItem.create!(quantity: 3, unit_price: 500, item_id: @item2.id, invoice_id: @invoice2.id, status: 1)
       end
       it "should return that day" do
         expected = @invoice1.created_at

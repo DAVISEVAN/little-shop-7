@@ -1,5 +1,3 @@
-# User Story: 12, 13
-
 require 'rails_helper'
 
 RSpec.describe 'Merchant Items Index top 5 items best day', type: :feature do

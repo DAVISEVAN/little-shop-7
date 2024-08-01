@@ -16,7 +16,6 @@ Rails.application.routes.draw do
       patch 'toggle_status', to: 'item_statuses#update', on: :member
     end
     resources :invoices, controller: 'merchant_invoices' do
-      
     end
   end
 

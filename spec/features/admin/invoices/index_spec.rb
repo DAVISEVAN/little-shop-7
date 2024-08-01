@@ -1,13 +1,12 @@
-
 require 'rails_helper'
 
 RSpec.describe "the admin invoices index page" do
   before(:each) do
-      @customer = create(:customer)
-      @customer2 = create(:customer)
-      @invoice1 = create(:invoice, customer: @customer)
-      @invoice2 = create(:invoice, customer: @customer)
-      @invoice3 = create(:invoice, customer: @customer2)
+    @customer = create(:customer)
+    @customer2 = create(:customer)
+    @invoice1 = create(:invoice, customer: @customer)
+    @invoice2 = create(:invoice, customer: @customer)
+    @invoice3 = create(:invoice, customer: @customer2)
   end
 
   it "has a list of all invoice ID's in the system that link to each invoice show page" do

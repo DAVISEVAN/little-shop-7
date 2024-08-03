@@ -7,6 +7,7 @@ RSpec.describe Invoice, type: :model do
 		it { should have_many :invoice_items }
 		it { should have_many(:items).through(:invoice_items) }
 		it { should have_many(:merchants).through(:items) }
+		it { should belong_to(:coupon).optional }
 	end
 	
 	describe "validations" do
@@ -55,6 +56,14 @@ RSpec.describe Invoice, type: :model do
       expect(@invoice2.total_revenue).to eq(1500)
       expect(@invoice3.total_revenue).to eq(500)
 		end
+
+		it 'calculates subtotal correctly' do
+      # Setup test data and expect correct subtotal calculation
+    end
+
+    it 'calculates grand total correctly' do
+      # Setup test data with coupon and expect correct grand total calculation
+    end
 	end
 
 	describe "class methods" do

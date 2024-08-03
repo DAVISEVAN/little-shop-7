@@ -15,7 +15,7 @@ class Coupon < ApplicationRecord
   enum status: { active: 0, inactive: 1 }
 
   # Custom validation to ensure a merchant can have at most 5 active coupons
-  validate :maximum_active_coupons_per_merchant, on: :create
+  validate :maximum_active_coupons_per_merchant, if: :merchant
 
   private
 

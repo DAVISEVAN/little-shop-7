@@ -1,0 +1,25 @@
+<h1>New Coupon for <%= @merchant.name %></h1>
+
+<%= form_with model: [@merchant, @coupon], local: true do |form| %>
+  <div>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+  <div>
+    <%= form.label :code %>
+    <%= form.text_field :code %>
+  </div>
+  <div>
+    <%= form.label :amount %>
+    <%= form.number_field :amount, step: 0.01 %>
+  </div>
+  <div>
+    <%= form.label :discount_type %>
+    <%= form.select :discount_type, Coupon.discount_types.keys.map { |w| [w.humanize, w] } %>
+  </div>
+  <div>
+    <%= form.submit 'Create Coupon' %>
+  </div>
+<% end %>
+
+<%= link_to 'Back to Coupons', merchant_coupons_path(@merchant) %>

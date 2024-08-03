@@ -1,5 +1,7 @@
 <h1>Coupons for <%= @merchant.name %></h1>
 
+<%= link_to 'Create New Coupon', new_merchant_coupon_path(@merchant) %>
+
 <h2>Active Coupons</h2>
 <div id="active-coupons">
   <% @active_coupons.each do |coupon| %>

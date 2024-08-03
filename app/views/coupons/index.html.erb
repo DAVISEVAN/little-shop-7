@@ -1,0 +1,23 @@
+<h1>Coupons for <%= @merchant.name %></h1>
+
+<h2>Active Coupons</h2>
+<div id="active-coupons">
+  <% @active_coupons.each do |coupon| %>
+    <p>
+      <%= link_to coupon.name, merchant_coupon_path(@merchant, coupon) %> - 
+      <%= number_to_currency(coupon.amount, unit: '') %> 
+      <%= coupon.discount_type == 'percent' ? 'Percent' : 'Dollar' %> off
+    </p>
+  <% end %>
+</div>
+
+<h2>Inactive Coupons</h2>
+<div id="inactive-coupons">
+  <% @inactive_coupons.each do |coupon| %>
+    <p>
+      <%= link_to coupon.name, merchant_coupon_path(@merchant, coupon) %> - 
+      <%= number_to_currency(coupon.amount, unit: '') %> 
+      <%= coupon.discount_type == 'percent' ? 'Percent' : 'Dollar' %> off
+    </p>
+  <% end %>
+</div>

@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     end
     resources :invoices, controller: 'merchant_invoices' do
     end
+    resources :coupons, only: [:index, :show]
   end
 
   resources :items do

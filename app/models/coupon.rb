@@ -17,6 +17,10 @@ class Coupon < ApplicationRecord
   # Custom validation to ensure a merchant can have at most 5 active coupons
   validate :maximum_active_coupons_per_merchant, if: :merchant
 
+  # Scope for active and inactive coupons
+  scope :active_coupons, -> { where(status: :active) }
+  scope :inactive_coupons, -> { where(status: :inactive) }
+
   private
 
   def maximum_active_coupons_per_merchant

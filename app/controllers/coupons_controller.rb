@@ -28,6 +28,28 @@ class CouponsController < ApplicationController
     end
   end
 
+  def update
+    @coupon = Coupon.find(params[:id])
+    
+    if params[:status] == 'activate'
+      if @coupon.update(status: 'active')
+        flash[:notice] = 'Coupon activated successfully'
+      else
+        flash[:alert] = 'Failed to activate coupon'
+      end
+    elsif params[:status] == 'deactivate'
+      if @coupon.invoices.where(status: 'in progress').any?
+        flash[:alert] = 'Cannot deactivate coupon with in-progress invoices'
+      elsif @coupon.update(status: 'inactive')
+        flash[:notice] = 'Coupon deactivated successfully'
+      else
+        flash[:alert] = 'Failed to deactivate coupon'
+      end
+    end
+
+    redirect_to merchant_coupon_path(@coupon.merchant, @coupon)
+  end
+
   private
 
   def coupon_params

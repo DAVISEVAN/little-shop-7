@@ -23,4 +23,28 @@ RSpec.describe Coupon, type: :model do
     it { should define_enum_for(:discount_type).with_values([:percent, :dollar]) }
     it { should define_enum_for(:status).with_values([:active, :inactive]) }
   end
+
+  
+    describe '#successful_transactions_count' do
+      it 'returns the count of successful transactions' do
+        coupon = create(:coupon)
+        invoice1 = create(:invoice, coupon: coupon)
+        invoice2 = create(:invoice, coupon: coupon)
+  
+        create(:transaction, invoice: invoice1, result: 'success')
+        create(:transaction, invoice: invoice1, result: 'failed')
+        create(:transaction, invoice: invoice2, result: 'success')
+  
+        expect(coupon.successful_transactions_count).to eq(2)
+      end
+  
+      it 'returns zero if there are no successful transactions' do
+        coupon = create(:coupon)
+        invoice = create(:invoice, coupon: coupon)
+  
+        create(:transaction, invoice: invoice, result: 'failed')
+  
+        expect(coupon.successful_transactions_count).to eq(0)
+      end
+    end 
 end

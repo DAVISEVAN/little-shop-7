@@ -1,2 +1,9 @@
-<h1>Coupons#show</h1>
-<p>Find me in app/views/coupons/show.html.erb</p>
+<h1>Coupon Details</h1>
+
+<p><strong>Name:</strong> <%= @coupon.name %></p>
+<p><strong>Code:</strong> <%= @coupon.code %></p>
+<p><strong>Value:</strong> <%= @coupon.amount %> <%= @coupon.discount_type %> off</p>
+<p><strong>Status:</strong> <%= @coupon.status %></p>
+<p><strong>Times Used:</strong> <%= @successful_transactions_count %></p>
+
+<%= link_to 'Back to Coupons', merchant_coupons_path(@coupon.merchant) %>

@@ -21,6 +21,11 @@ class Coupon < ApplicationRecord
   scope :active_coupons, -> { where(status: :active) }
   scope :inactive_coupons, -> { where(status: :inactive) }
 
+  # Method for counting successful transactions
+  def successful_transactions_count
+    invoices.joins(:transactions).where(transactions: { result: 'success' }).count
+  end
+
   private
 
   def maximum_active_coupons_per_merchant

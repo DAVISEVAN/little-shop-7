@@ -12,6 +12,8 @@ class MerchantInvoicesController < ApplicationController
     @merchant = Merchant.find(params[:merchant_id])
     @invoice = @merchant.invoices.find(params[:id])
     @invoice_items = @invoice.invoice_items
+    @subtotal = @invoice.subtotal(@merchant)
+    @grand_total = @invoice.grand_total(@merchant)
   end
 
   def update

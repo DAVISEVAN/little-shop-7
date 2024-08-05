@@ -56,19 +56,74 @@ RSpec.describe Invoice, type: :model do
       expect(@invoice2.total_revenue).to eq(1500)
       expect(@invoice3.total_revenue).to eq(500)
 		end
-
-		it 'calculates subtotal correctly' do
-      # Setup test data and expect correct subtotal calculation
-    end
-
-    it 'calculates grand total correctly' do
-      # Setup test data with coupon and expect correct grand total calculation
-    end
 	end
 
 	describe "class methods" do
 		it "self.incomplete_invoices" do
 			expect(Invoice.incomplete_invoices).to eq([@invoice1, @invoice2, @invoice4, @invoice5])
 		end
-	end
+	end	
+
+	describe 'instance methods' do
+    before :each do
+      @merchant1 = create(:merchant)
+      @merchant2 = create(:merchant)
+      @customer = create(:customer)
+      @coupon = create(:coupon, merchant: @merchant1, discount_type: 'percent', amount: 10)
+      @invoice = create(:invoice, customer: @customer, coupon: @coupon, status: 'completed')
+      @item1 = create(:item, merchant: @merchant1)
+      @item2 = create(:item, merchant: @merchant2)
+      @invoice_item1 = create(:invoice_item, invoice: @invoice, item: @item1, quantity: 2, unit_price: 1000) # $20.00 total
+      @invoice_item2 = create(:invoice_item, invoice: @invoice, item: @item2, quantity: 1, unit_price: 2000) # $20.00 total
+    end
+
+    describe '#admin_subtotal' do
+      it 'calculates the subtotal for the entire invoice' do
+        expect(@invoice.admin_subtotal).to eq(4000) # $40.00 total
+      end
+    end
+
+    describe '#admin_grand_total' do
+      it 'calculates the grand total for the entire invoice with a percent discount' do
+        expect(@invoice.admin_grand_total).to eq(3800) # $40.00 - 10% of $20.00 (only items from merchant1)
+      end
+
+      it 'calculates the grand total for the entire invoice with a dollar discount' do
+        @coupon.update(discount_type: 'dollar', amount: 500)
+        expect(@invoice.admin_grand_total).to eq(3500) # $40.00 - $5.00
+      end
+
+      it 'does not apply discount to the grand total if no coupon' do
+        @invoice.update(coupon: nil)
+        expect(@invoice.admin_grand_total).to eq(4000) # $40.00 total
+      end
+    end
+
+    describe '#subtotal' do
+      it 'calculates the subtotal for the merchant' do
+        expect(@invoice.subtotal(@merchant1)).to eq(2000) # $20.00 total for merchant1
+        expect(@invoice.subtotal(@merchant2)).to eq(2000) # $20.00 total for merchant2
+      end
+    end
+
+    describe '#grand_total' do
+      it 'calculates the grand total for the merchant with a percent discount' do
+        expect(@invoice.grand_total(@merchant1)).to eq(1800) # $20.00 - 10% of $20.00 for merchant1
+        expect(@invoice.grand_total(@merchant2)).to eq(2000) # $20.00 total for merchant2 (no discount)
+      end
+
+      it 'calculates the grand total for the merchant with a dollar discount' do
+        @coupon.update(discount_type: 'dollar', amount: 500)
+        expect(@invoice.grand_total(@merchant1)).to eq(1500) # $20.00 - $5.00 for merchant1
+        expect(@invoice.grand_total(@merchant2)).to eq(2000) # $20.00 total for merchant2 (no discount)
+      end
+
+      it 'does not apply discount to the grand total if no coupon' do
+        @invoice.update(coupon: nil)
+        expect(@invoice.grand_total(@merchant1)).to eq(2000) # $20.00 total for merchant1
+        expect(@invoice.grand_total(@merchant2)).to eq(2000) # $20.00 total for merchant2
+      end
+    end
+  end
 end
+

@@ -23,3 +23,16 @@
   <h3>Total Revenue for Invoice</h3>
   <p>Total Invoice Revenue: <%= number_to_currency(@invoice.total_revenue / 100.0) %></p>
 </section>
+
+<div id="invoice-totals">
+  <h2>Invoice Totals</h2>
+  <p><strong>Subtotal:</strong> <%= number_to_currency(@subtotal / 100.0) %></p>
+  <p><strong>Grand Total:</strong> <%= number_to_currency(@grand_total / 100.0) %></p>
+
+  <% if @invoice.coupon %>
+    <p>
+      <strong>Coupon Used:</strong>
+      <%= link_to @invoice.coupon.name, merchant_coupon_path(@invoice.coupon.merchant, @invoice.coupon) %> - <%= @invoice.coupon.code %>
+    </p>
+  <% end %>
+</div>

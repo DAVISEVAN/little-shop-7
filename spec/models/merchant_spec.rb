@@ -5,6 +5,7 @@ RSpec.describe Merchant, type: :model do
     it { should have_many(:items) }
     it { should have_many(:invoice_items).through(:items) }
     it { should have_many(:invoices).through(:items) }
+    it { should have_many(:coupons) }
   end
 
   describe 'methods' do
@@ -149,6 +150,17 @@ RSpec.describe Merchant, type: :model do
         expected = ""
         expect(actual).to eq(expected)
       end
+    end
+  end
+
+  describe 'coupon methods' do
+    it 'should validate maximum of 5 active coupons' do
+      merchant = create(:merchant)
+      create_list(:coupon, 5, merchant: merchant, status: 0) # 5 active coupons
+      new_coupon = merchant.coupons.new(name: 'Test', code: 'TEST10', amount: 10, discount_type: 1, status: 0)
+
+      expect(new_coupon.valid?).to be_falsey
+      expect(new_coupon.errors[:base]).to include('Maximum of 5 active coupons reached')
     end
   end
 end

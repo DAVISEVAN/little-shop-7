@@ -22,10 +22,6 @@ class Invoice < ApplicationRecord
     .order("invoices.created_at")
   end
 
-  def total_revenue
-    invoice_items.sum("unit_price * quantity")
-  end
-
   def subtotal(merchant)
     invoice_items.joins(:item)
                  .where(items: { merchant_id: merchant.id })
